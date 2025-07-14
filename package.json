@@ -1,0 +1,25 @@
+{
+  "name": "messaging-app-socket.io-mongodb",
+  "version": "1.0.0",
+  "main": "server.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hasanhayat/messaging-app-socket.io-mongodb.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Hasanhayat/messaging-app-socket.io-mongodb/issues"
+  },
+  "homepage": "https://github.com/Hasanhayat/messaging-app-socket.io-mongodb#readme",
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.0",
+    "express": "^5.1.0",
+    "mongoose": "^8.16.3"
+  }
+}

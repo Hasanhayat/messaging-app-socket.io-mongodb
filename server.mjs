@@ -35,10 +35,6 @@ db.once('open', () => {
   console.log('Connected to MongoDB');
 });
 
-
-
-
-
 app.get("/api/v1/", (req, res) => {
   res.send("Welcome to the E-commerce API");
 });

@@ -59,22 +59,22 @@ router.post("message", async (req, res) => {
 });
 router.get("messages", async (req, res) => {
   const { senderId, receiverId } = req.body;
-   try {
-        let conversation = await messageModel.find({
-            $or: [
-                {
-                    from: receiverId,
-                    to: senderId
-                },
-                {
-                    from: senderId,
-                    to: receiverId,
-                }
-            ]
-        })
-        res.send({message: "Message Found", conversation: conversation})
-    } catch (error) {
-        res.status(500).send({message: "Internal Server Error"})
-    }
+  try {
+    let conversation = await messageModel.find({
+      $or: [
+        {
+          from: receiverId,
+          to: senderId,
+        },
+        {
+          from: senderId,
+          to: receiverId,
+        },
+      ],
+    });
+    res.send({ message: "Message Found", conversation: conversation });
+  } catch (error) {
+    res.status(500).send({ message: "Internal Server Error" });
+  }
 });
 export default router;

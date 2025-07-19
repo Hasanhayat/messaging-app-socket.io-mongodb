@@ -3,6 +3,7 @@ import http from "http";
 import { Message, User } from "../models.mjs";
 
 const router = express.Router();
+router.use(express.json());
 
 router.get("/profile", async (req, res) => {
   const user = req.user;
@@ -38,8 +39,9 @@ router.get("/user/:id", async (req, res) => {
   }
 });
 
-router.post("message", async (req, res) => {
-  const { senderId, receiverId, content } = req.body;
+router.post("/message", async (req, res) => {
+  const { receiverId, content } = req.body;
+  const senderId = req.user.id;
   try {
     const message = Message.create({
       sender: senderId,
@@ -51,16 +53,18 @@ router.post("message", async (req, res) => {
     }
     res
       .status(201)
-      .json({ message: "Message sent successfully", message: message });
+      .json({ message: "Message sent successfully", chat: message });
   } catch (error) {
     console.error("Error sending message:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
-router.get("messages", async (req, res) => {
-  const { senderId, receiverId } = req.body;
+router.post("/messages", async (req, res) => {
+  const { receiverId } = req.body;
+  const senderId = req.user.id;
+
   try {
-    let conversation = await messageModel.find({
+    let conversation = await Message.find({
       $or: [
         {
           from: receiverId,
@@ -74,7 +78,7 @@ router.get("messages", async (req, res) => {
     });
     res.send({ message: "Message Found", conversation: conversation });
   } catch (error) {
-    res.status(500).send({ message: "Internal Server Error" });
+    res.status(500).send({ message: "Internal Server Error",error: error });
   }
 });
 export default router;

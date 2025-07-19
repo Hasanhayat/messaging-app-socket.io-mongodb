@@ -65,17 +65,13 @@ router.post("/messages", async (req, res) => {
 
   try {
     let conversation = await Message.find({
-      $or: [
-        {
-          from: receiverId,
-          to: senderId,
-        },
-        {
-          from: senderId,
-          to: receiverId,
-        },
+     $or: [
+        { sender: senderId, receiver: receiverId },
+        { sender: receiverId, receiver: senderId },
       ],
-    });
+});
+console.log(conversation);
+
     res.send({ message: "Message Found", conversation: conversation });
   } catch (error) {
     res.status(500).send({ message: "Internal Server Error",error: error });

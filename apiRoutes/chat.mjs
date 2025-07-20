@@ -1,6 +1,7 @@
 import express from "express";
 import http from "http";
 import { Message, User } from "../models.mjs";
+import { log } from "console";
 
 const router = express.Router();
 router.use(express.json());
@@ -43,7 +44,7 @@ router.post("/message", async (req, res) => {
   const { receiverId, content } = req.body;
   const senderId = req.user.id;
   try {
-    const message = Message.create({
+    const message = await Message.create({
       sender: senderId,
       receiver: receiverId,
       content: content,
@@ -60,7 +61,7 @@ router.post("/message", async (req, res) => {
   }
 });
 router.post("/messages", async (req, res) => {
-  const { receiverId } = req.body;
+  const { receiverId } = req.body.data;
   const senderId = req.user.id;
 
   try {
@@ -70,7 +71,6 @@ router.post("/messages", async (req, res) => {
         { sender: receiverId, receiver: senderId },
       ],
 });
-console.log(conversation);
 
     res.send({ message: "Message Found", conversation: conversation });
   } catch (error) {

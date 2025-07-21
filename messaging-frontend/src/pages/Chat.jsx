@@ -30,7 +30,6 @@ const Chat = () => {
   const [sendingMessage, setSendingMessage] = useState(false);
 
   useEffect(() => {
-    console.log(state);
     
     const fetchUsers = async () => {
       try {
@@ -312,7 +311,7 @@ const Chat = () => {
             >
               <Box display="flex" flexDirection="column" gap={2}>
                 {messages.map((msg, index) => {
-                  const isOwnMessage = msg.sender._id === state.user.id;
+                  const isOwnMessage = msg.sender._id === state.user._id;
                   return (
                     <Box
                       key={msg._id || index}

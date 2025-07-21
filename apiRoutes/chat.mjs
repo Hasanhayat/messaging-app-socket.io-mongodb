@@ -8,9 +8,11 @@ router.use(express.json());
 
 export default function (io) {
   router.get("/profile", async (req, res) => {
-    const user = req.user;
     try {
-      const user = req.user;
+      const user = await User.findById(req.user.id, "-password -__v");
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
       res.send({ message: "User profile", user: user });
     } catch (error) {
       res.status(500).json({ error: "Internal server error" });

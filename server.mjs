@@ -34,9 +34,9 @@ io.on('connection', (socket) => {
     });
 });
 
-setInterval(() => {
-  io.emit("message", { message: io.engine });
-}, 3000);
+// setInterval(() => {
+//   io.emit("message", { message: new Date().toLocaleTimeString() });
+// }, 3000);
 /////////
 app.use(express.json());
 app.use(cookieParser());

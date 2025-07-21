@@ -20,8 +20,8 @@ const Login = () => {
     setLoading(true);
     try {
       const res = await api.post("/login", form);
-      toast.success(res.data.message);
       dispatch({ type: "USER_LOGIN", user: res.data.user });
+      toast.success(res.data.message);
     } catch (err) {
       toast.error(err.response?.data?.error || "Something went wrong");
     }

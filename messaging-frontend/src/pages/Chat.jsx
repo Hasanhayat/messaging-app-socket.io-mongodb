@@ -30,10 +30,19 @@ const Chat = () => {
   const [sendingMessage, setSendingMessage] = useState(false);
 
   useEffect(() => {
+    console.log(state);
+    
     const fetchUsers = async () => {
       try {
         const res = await api.get("/users");
-        setUsers(res.data.users || []);
+
+          let filteredUsers = res.data.users.filter(
+            (user) => user._id !== state.user._id  
+          );        
+  
+          setUsers(filteredUsers || []);
+          
+
       } catch (err) {
         console.error("Error fetching users:", err);
       } finally {
@@ -196,7 +205,6 @@ const Chat = () => {
             sx={{ pt: 0, maxHeight: "calc(100vh - 140px)", overflow: "auto" }}
           >
             {users
-              .filter((u) => u._id !== state.user.id)
               .map((user) => (
                 <ListItem
                   key={user._id}

@@ -59,7 +59,9 @@ export default function (io) {
         .populate({ path: 'sender', select: 'firstName lastName email' })
         .populate({ path: 'receiver', select: 'firstName lastName email' })
         .exec();
-        
+        io.emit("message", {
+          message: populatedMessage,
+        });
       res
         .status(201)
         .json({ message: "Message sent successfully", chat: populatedMessage });

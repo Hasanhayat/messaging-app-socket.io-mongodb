@@ -1,4 +1,3 @@
-"use client";
 
 import { useEffect, useState, useContext } from "react";
 import { GlobalContext } from "../context/Context";
@@ -17,7 +16,7 @@ import {
   Paper,
   CircularProgress,
 } from "@mui/material";
-import { Send, LogOut, MessageCircle, Clock } from "lucide-react";
+import { Send, LogOut, MessageCircle, CircleCheckBigIcon } from "lucide-react";
 
 const Chat = () => {
   const { state, dispatch } = useContext(GlobalContext);
@@ -105,7 +104,7 @@ const Chat = () => {
   };
 
 
-  
+
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -305,7 +304,7 @@ const Chat = () => {
             >
               <Box display="flex" flexDirection="column" gap={2}>
                 {messages.map((msg, index) => {
-                  const isOwnMessage = msg.sender === state.user.id;
+                  const isOwnMessage = msg.sender._id === state.user.id;
                   return (
                     <Box
                       key={msg._id || index}
@@ -336,7 +335,8 @@ const Chat = () => {
                           mt={0.5}
                           color={isOwnMessage ? "#bbdefb" : "#aaa"}
                         >
-                          <Clock size={12} style={{ marginRight: 4 }} />
+                          <CircleCheckBigIcon size={12} style={{ marginRight: 4 }} />
+
                           <Typography variant="caption">
                             {formatTime(msg.timestamp)}
                           </Typography>

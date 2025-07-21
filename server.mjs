@@ -49,7 +49,7 @@ app.use("/api/v1/*splat", (req, res, next) => {
   });
 });
 
-app.use("/api/v1", chat)
+app.use("/api/v1", chat())
 
 
 

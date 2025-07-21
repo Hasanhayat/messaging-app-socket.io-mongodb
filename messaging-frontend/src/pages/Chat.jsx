@@ -196,7 +196,7 @@ const Chat = () => {
             sx={{ pt: 0, maxHeight: "calc(100vh - 140px)", overflow: "auto" }}
           >
             {users
-              .filter((u) => u._id !== state.user._id)
+              .filter((u) => u._id !== state.user.id)
               .map((user) => (
                 <ListItem
                   key={user._id}

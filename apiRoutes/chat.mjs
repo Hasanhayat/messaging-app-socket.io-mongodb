@@ -6,7 +6,7 @@ import { log } from "console";
 const router = express.Router();
 router.use(express.json());
 
-export default function () {
+export default function (io) {
   router.get("/profile", async (req, res) => {
     const user = req.user;
     try {

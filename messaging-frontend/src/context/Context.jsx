@@ -6,8 +6,7 @@ export const GlobalContext = createContext("Initial Value");
 let data = {
     user: {},
     isLogin: null,
-    isLoading: false,
-    users: [],
+    ioUrl: window.location.protocol === "http:" ? "http://localhost:8080" : "",
 }
 
 export default function ContextProvider({ children }) {

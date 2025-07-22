@@ -1,4 +1,3 @@
-
 import { useEffect, useState, useContext } from "react";
 import { GlobalContext } from "../context/Context";
 import api from "../api";
@@ -17,6 +16,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { Send, LogOut, MessageCircle, CircleCheckBigIcon } from "lucide-react";
+import io from "socket.io-client";
 
 const Chat = () => {
   const { state, dispatch } = useContext(GlobalContext);
@@ -30,18 +30,15 @@ const Chat = () => {
   const [sendingMessage, setSendingMessage] = useState(false);
 
   useEffect(() => {
-    
     const fetchUsers = async () => {
       try {
         const res = await api.get("/users");
 
-          let filteredUsers = res.data.users.filter(
-            (user) => user._id !== state.user._id  
-          );        
-  
-          setUsers(filteredUsers || []);
-          
+        let filteredUsers = res.data.users.filter(
+          (user) => user._id !== state.user._id
+        );
 
+        setUsers(filteredUsers || []);
       } catch (err) {
         console.error("Error fetching users:", err);
       } finally {
@@ -49,6 +46,26 @@ const Chat = () => {
       }
     };
     fetchUsers();
+  }, []);
+
+  useEffect(() => {
+    const socket = io(state.ioUrl);
+    socket.on("connect", () => {
+      console.log("Connected to WebSocket server:", socket.id);
+    });
+
+    socket.on("disconnect", (reason) => {
+      console.log("Disconnected. Reason:", reason);
+    });
+
+    socket.on("error", (error) => {
+      console.log("Error:", error);
+    });
+
+    return () => {
+      socket.disconnect();
+      console.log("Disconnected from WebSocket server");
+    };
   }, []);
 
   const loadConversation = async (receiverId) => {
@@ -110,8 +127,6 @@ const Chat = () => {
     if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h ago`;
     return messageTime.toLocaleDateString();
   };
-
-
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -203,55 +218,54 @@ const Chat = () => {
           <List
             sx={{ pt: 0, maxHeight: "calc(100vh - 140px)", overflow: "auto" }}
           >
-            {users
-              .map((user) => (
-                <ListItem
-                  key={user._id}
-                  button
-                  onClick={() => loadConversation(user._id)}
-                  sx={{
-                    mx: 1,
-                    mb: 0.5,
-                    borderRadius: 2,
-                    bgcolor:
-                      selectedUser === user._id ? "#2196f3" : "transparent",
-                    "&:hover": {
-                      bgcolor: selectedUser === user._id ? "#1976d2" : "#333",
-                    },
-                    transition: "all 0.2s ease",
-                  }}
-                >
-                  <ListItemAvatar>
-                    <Avatar
-                      sx={{
-                        bgcolor: selectedUser === user._id ? "#1565c0" : "#555",
-                        color: "white",
-                      }}
+            {users.map((user) => (
+              <ListItem
+                key={user._id}
+                button
+                onClick={() => loadConversation(user._id)}
+                sx={{
+                  mx: 1,
+                  mb: 0.5,
+                  borderRadius: 2,
+                  bgcolor:
+                    selectedUser === user._id ? "#2196f3" : "transparent",
+                  "&:hover": {
+                    bgcolor: selectedUser === user._id ? "#1976d2" : "#333",
+                  },
+                  transition: "all 0.2s ease",
+                }}
+              >
+                <ListItemAvatar>
+                  <Avatar
+                    sx={{
+                      bgcolor: selectedUser === user._id ? "#1565c0" : "#555",
+                      color: "white",
+                    }}
+                  >
+                    {user.firstName[0]}
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={
+                    <Typography
+                      variant="subtitle2"
+                      fontWeight="500"
+                      color={selectedUser === user._id ? "white" : "#ddd"}
                     >
-                      {user.firstName[0]}
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={
-                      <Typography
-                        variant="subtitle2"
-                        fontWeight="500"
-                        color={selectedUser === user._id ? "white" : "#ddd"}
-                      >
-                        {user.firstName} {user.lastName}
-                      </Typography>
-                    }
-                    secondary={
-                      <Typography
-                        variant="caption"
-                        color={selectedUser === user._id ? "#bbdefb" : "#888"}
-                      >
-                        {user.email}
-                      </Typography>
-                    }
-                  />
-                </ListItem>
-              ))}
+                      {user.firstName} {user.lastName}
+                    </Typography>
+                  }
+                  secondary={
+                    <Typography
+                      variant="caption"
+                      color={selectedUser === user._id ? "#bbdefb" : "#888"}
+                    >
+                      {user.email}
+                    </Typography>
+                  }
+                />
+              </ListItem>
+            ))}
           </List>
         </Box>
       </Box>
@@ -342,7 +356,10 @@ const Chat = () => {
                           mt={0.5}
                           color={isOwnMessage ? "#bbdefb" : "#aaa"}
                         >
-                          <CircleCheckBigIcon size={12} style={{ marginRight: 4 }} />
+                          <CircleCheckBigIcon
+                            size={12}
+                            style={{ marginRight: 4 }}
+                          />
 
                           <Typography variant="caption">
                             {formatTime(msg.timestamp)}

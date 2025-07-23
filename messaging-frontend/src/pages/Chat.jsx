@@ -49,7 +49,9 @@ const Chat = () => {
   }, []);
 
   useEffect(() => {
-    const socket = io(state.ioUrl);
+    const socket = io(state.ioUrl, {
+      withCredentials: true,
+    });
     socket.on("connect", () => {
       console.log("Connected to WebSocket server:", socket.id);
     });

@@ -48,10 +48,21 @@ const Chat = () => {
     fetchUsers();
   }, []);
 
-  useEffect(() => {
-    const socket = io(state.ioUrl, {
-      withCredentials: true,
+  const socket = io(state.ioUrl, {
+    withCredentials: true,
+  });
+
+  const ioConnect = (receiverId) => {
+    console.log("Connecting to WebSocket for user:", receiverId);
+    
+    socket.on(`${receiverId}-${state.user._id}`, (data) => {
+      console.log("New message received:", data);
+      setMessages((prev) => [...prev, data]);
     });
+  };
+
+  useEffect(() => {
+
     socket.on("connect", () => {
       console.log("Connected to WebSocket server:", socket.id);
     });
@@ -71,6 +82,7 @@ const Chat = () => {
   }, []);
 
   const loadConversation = async (receiverId) => {
+    ioConnect(receiverId);
     try {
       const res = await api.post("/messages", {
         data: {

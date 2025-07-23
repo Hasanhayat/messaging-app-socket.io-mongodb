@@ -58,12 +58,14 @@ export default function (io) {
 
       // Optionally, you can populate the sender and receiver details
       const populatedMessage = await Message.findById(message._id)
-        .populate({ path: 'sender', select: 'firstName lastName email' })
-        .populate({ path: 'receiver', select: 'firstName lastName email' })
+        .populate({ path: "sender", select: "firstName lastName email" })
+        .populate({ path: "receiver", select: "firstName lastName email" })
         .exec();
-        io.emit("message", {
-          message: populatedMessage,
-        });
+      io.emit("message", {
+        message: populatedMessage,
+      });
+      io.emit(`${senderId}-${receiverId}`, populatedMessage);
+      io.emit(`personal-channel-${receiverId}`, populatedMessage);
       res
         .status(201)
         .json({ message: "Message sent successfully", chat: populatedMessage });
@@ -81,9 +83,10 @@ export default function (io) {
         $or: [
           { sender: senderId, receiver: receiverId },
           { sender: receiverId, receiver: senderId },
-        ]
-      }).populate({path: 'sender', select: 'firstName lastName email'})
-        .populate({path: 'receiver', select: 'firstName lastName email'})
+        ],
+      })
+        .populate({ path: "sender", select: "firstName lastName email" })
+        .populate({ path: "receiver", select: "firstName lastName email" })
         .exec();
 
       res.send({ message: "Message Found", conversation: conversation });

@@ -52,14 +52,14 @@ const Chat = () => {
     withCredentials: true,
   });
 
-  const ioConnect = (receiverId) => {
-    console.log("Connecting to WebSocket for user:", receiverId);
+  // const ioConnect = (receiverId) => {
+  //   console.log("Connecting to WebSocket for user:", receiverId);
     
-    socket.on(`${receiverId}-${state.user._id}`, (data) => {
-      console.log("New message received:", data);
-      setMessages((prev) => [...prev, data]);
-    });
-  };
+  //   socket.on(`${receiverId}-${state.user._id}`, (data) => {
+  //     console.log("New message received:", data);
+  //     setMessages((prev) => [...prev, data]);
+  //   });
+  // };
 
   useEffect(() => {
 

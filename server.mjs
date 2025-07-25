@@ -7,6 +7,7 @@ import 'dotenv/config'
 import jwt from 'jsonwebtoken';
 import auth from './apiRoutes/auth.mjs'
 import chat from './apiRoutes/chat.mjs'
+import cookie from 'cookie';
 
 
 const app = express();

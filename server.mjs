@@ -2,19 +2,17 @@ import express from "express";
 import cors from "cors";
 import path from "path";
 import cookieParser from "cookie-parser";
-import mongoose from 'mongoose';
-import 'dotenv/config'
-import jwt from 'jsonwebtoken';
-import auth from './apiRoutes/auth.mjs'
-import chat from './apiRoutes/chat.mjs'
-import cookie from 'cookie';
-
+import mongoose from "mongoose";
+import "dotenv/config";
+import jwt from "jsonwebtoken";
+import auth from "./apiRoutes/auth.mjs";
+import chat from "./apiRoutes/chat.mjs";
+import cookie from "cookie";
 
 const app = express();
 
-
-// web socket 
-import { Server } from 'socket.io';
+// web socket
+import { Server } from "socket.io";
 import { createServer } from "http";
 // Create an HTTP server
 const server = createServer(app);
@@ -25,14 +23,14 @@ const io = new Server(server, {
     methods: ["GET", "POST"],
     credentials: true,
   },
-})
+});
 
-io.on('connection', (socket) => {
-  console.log('a user connected', socket.id);
+io.on("connection", (socket) => {
+  console.log("a user connected", socket.id);
 
   socket.on("disconnect", (reason) => {
-        console.log("Client disconnected:", socket.id, "Reason:", reason);
-    });
+    console.log("Client disconnected:", socket.id, "Reason:", reason);
+  });
 });
 
 // setInterval(() => {
@@ -51,18 +49,16 @@ app.use(
 const PORT = process.env.PORT || 8080;
 const JWT_SECRET = process.env.JWT_SECRET;
 
-
 mongoose.connect(process.env.MONGO_URI);
 mongoose.connection.on("connected", () => console.log("Connected to MongoDB"));
 mongoose.connection.on("error", () =>
   console.log("Error connecting to MongoDB")
 );
 
-
 app.get("/api/v1/", (req, res) => {
   res.send("Welcome to the E-commerce API");
 });
-app.use("/api/v1", auth)
+app.use("/api/v1", auth);
 
 app.use("/api/v1/*splat", (req, res, next) => {
   const token = req.cookies.Token;
@@ -78,22 +74,16 @@ app.use("/api/v1/*splat", (req, res, next) => {
   });
 });
 
-app.use("/api/v1", chat(io))
-
-
-
-
+app.use("/api/v1", chat(io));
 
 let __dirname = path.resolve();
 app.use("/", express.static(path.join(__dirname, "./messaging-frontend/dist")));
-app.use("/*splat", express.static(path.join(__dirname, "messaging-frontend", "dist")));
-
-
-
-
+app.use(
+  "/*splat",
+  express.static(path.join(__dirname, "messaging-frontend", "dist"))
+);
 
 // Socket.IO connection if we use socket.io then we need to use http server.listen
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-

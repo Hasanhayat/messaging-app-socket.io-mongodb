@@ -28,6 +28,29 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   console.log("a user connected", socket.id);
 
+  // console.log(socket?.handshake?.headers);
+  let userCookie;
+  if (socket?.handshake?.headers?.cookie) {
+    userCookie = cookie.parse(socket?.handshake?.headers?.cookie);
+
+    if (!userCookie?.Token) {
+      socket.disconnect();
+    }
+
+    jwt.verify(userCookie.Token, process.env.JWT_SECRET, (err, decodedData) => {
+      if (!err) {
+        const nowDate = new Date().getTime() / 1000;
+
+        if (decodedData.exp < nowDate) {
+          socket.disconnect();
+        } else {
+        }
+      } else {
+        socket.disconnect();
+      }
+    });
+  }
+
   socket.on("disconnect", (reason) => {
     console.log("Client disconnected:", socket.id, "Reason:", reason);
   });

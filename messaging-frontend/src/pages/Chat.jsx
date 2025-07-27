@@ -79,9 +79,10 @@ const Chat = () => {
       socket.disconnect();
       console.log("Disconnected from WebSocket server");
     };
-  }, [selectedUser]);
+  }, []);
 
   const loadConversation = async (receiverId) => {
+    socket.disconnect();
     ioConnect(receiverId);
     try {
       const res = await api.post("/messages", {

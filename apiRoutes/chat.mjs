@@ -1,7 +1,5 @@
 import express from "express";
-import http from "http";
 import { Message, User } from "../models.mjs";
-import { log } from "console";
 
 const router = express.Router();
 router.use(express.json());

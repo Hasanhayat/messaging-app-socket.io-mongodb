@@ -54,7 +54,7 @@ const Chat = () => {
 
   const ioConnect = (receiverId) => {
     console.log("Connecting to WebSocket for user:", receiverId);
-    
+
     socket.on(`${receiverId}-${state.user._id}`, (data) => {
       console.log("New message received:", data);
       setMessages((prev) => [...prev, data]);
@@ -62,7 +62,6 @@ const Chat = () => {
   };
 
   useEffect(() => {
-
     socket.on("connect", () => {
       console.log("Connected to WebSocket server:", socket.id);
     });

@@ -6,6 +6,8 @@ import { TextField, Button, CircularProgress } from "@mui/material";
 import { UserPlus } from "lucide-react";
 import { Link } from "react-router";
 
+
+
 const Signup = () => {
   const [form, setForm] = useState({
     firstName: "",

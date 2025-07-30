@@ -1,8 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router";
 import { Toaster } from "react-hot-toast";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { GlobalContext } from "./context/Context.jsx";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -43,7 +41,6 @@ function App() {
         </Routes>
       )}
       <Toaster position="top-center" reverseOrder={false} />
-      <ToastContainer position="top-right" autoClose={3000} />
     </>
   );
 }

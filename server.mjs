@@ -74,8 +74,11 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 mongoose.connect(process.env.MONGO_URI);
 mongoose.connection.on("connected", () => console.log("Connected to MongoDB"));
-mongoose.connection.on("error", () =>
+mongoose.connection.on("error", () =>{
   console.log("Error connecting to MongoDB")
+  process.exit(1);
+}
+
 );
 
 app.get("/api/v1/", (req, res) => {

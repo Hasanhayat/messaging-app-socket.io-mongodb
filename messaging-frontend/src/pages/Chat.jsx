@@ -125,6 +125,7 @@ const Chat = () => {
       setSelectedUser(receiverId)
       const userInfo = users.find((u) => u._id === receiverId)
       setSelectedUserInfo(userInfo)
+      
     } catch (err) {
       console.error("Error loading conversation:", err)
     } finally {
@@ -518,7 +519,7 @@ const Chat = () => {
                           },
                         }}
                       />
-                      Online • {selectedUserInfo?.email}
+                    {selectedUserInfo?.email}
                     </Typography>
                   </Box>
                 </Box>
